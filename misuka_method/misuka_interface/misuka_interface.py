@@ -233,11 +233,18 @@ class misukaMethod(SimulationMethod):
                 ]
 
                 with np.errstate(divide='ignore', invalid='ignore'):
-                    t20 = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc, 'T20'))
+                    # reverberation_time_linear_regression compares the EDC's
+                    # dB values against *absolute* thresholds (e.g. -5/-25 dB
+                    # for T20), so it requires the EDC to be anchored at 0 dB
+                    # at t=0 -- schroeder_integration's raw output is not
+                    # (edc.time[..., 0] is the total energy, not 1). Use
+                    # edc_normalized instead of the
+                    # raw edc here and below (T30, EDT).
+                    t20 = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc_normalized, 'T20'))
                     t20 = finite_array(t20, nan=0.0, neginf=0.0, posinf=0.0)
                     result_container["results"][0]["responses"][i_rec]["parameters"]['t20'] = t20.tolist()
 
-                    t30 = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc, 'T30'))
+                    t30 = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc_normalized, 'T30'))
                     t30 = finite_array(t30, nan=0.0, neginf=0.0, posinf=0.0)
                     result_container["results"][0]["responses"][i_rec]["parameters"]['t30'] = t30.tolist()
 
@@ -256,7 +263,7 @@ class misukaMethod(SimulationMethod):
                     spl = finite_array(spl, nan=0.0, neginf=0.0, posinf=0.0)
                     result_container["results"][0]["responses"][i_rec]["parameters"]['spl_t0_freq'] = spl.tolist()
 
-                    edt = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc, 'EDT'))
+                    edt = np.squeeze(pr.parameters.reverberation_time_linear_regression(edc_normalized, 'EDT'))
                     edt = finite_array(edt, nan=0.0, neginf=0.0, posinf=0.0)
                     result_container["results"][0]["responses"][i_rec]["parameters"]['edt'] = edt.tolist()
 
