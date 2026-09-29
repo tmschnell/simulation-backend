@@ -30,7 +30,7 @@
             "type": "integer",
             "display": "text",
             "min": 100,
-            "max": 40000,
+            "max": 44100,
             "step": 1000,
             "default": 20000,
             "endAdornment": "Hz",
@@ -57,17 +57,15 @@
             "description": "Speed of sound in m/s that is used in simulation."
         },
         {
-            "name": "Speed of Sound Calculation",
+            "name": "Speed of Sound Method",
             "id": "speed_method",
-            "type": "string",
-            "display": "radio",
-            "options": 
-            {
-                "Auto": "auto",
-                "Own Value": "own_value"
-            },
-            "default": "auto",
-            "description": "If 'auto' the most accurate method for the provided atmospheric input is chosen. Else the in Speed of Sound specified value is taken."
+            "type": "integer",
+            "display": "text",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 1,
+            "description": "1 = Simple: ISO 9613-1, temperature only. 2 = Ideal Gas: temperature, humidity and pressure. 3 = Cramer: temperature, humidity, pressure and CO2. 4 = Own Value: the value given in Speed of Sound. Missing medium values are taken from misuka's standard medium (25 C, 60 % RH, 101825 Pa, 3167 Pa, 400 ppm)."
         },
         {
             "name": "Apply Air Attenuation",
